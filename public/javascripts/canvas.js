@@ -75,17 +75,14 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (c, rock, cPos) {
-  x = rock.x - cPos.x;
-  y = rock.y - cPos.y;
-
   c.fillStyle = "#aaa";
   c.lineWidth = 1;
 
   c.beginPath();
 
-  c.moveTo(rock.l[0].x, rock.l[1].y);
+  c.moveTo(rock.l[0].x - cPos.x, rock.l[1].y - cPos.y);
   for (var i=1; i<rock.l.length; i++) {
-    c.lineTo(rock.l[i].x, rock.l[i].y);
+    c.lineTo(rock.l[i].x - cPos.x, rock.l[i].y - cPos.y);
   };
 
   c.closePath();
