@@ -188,7 +188,8 @@ function new_player(socket) {
         'score': 0,
         'pos': new_spawn_point(),
         'direction': 0,
-        'life': MAX_LIFE
+        'life': MAX_LIFE,
+        'team': Math.round(Math.random())
     };
 
 

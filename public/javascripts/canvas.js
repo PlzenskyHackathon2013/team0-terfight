@@ -1,7 +1,7 @@
 window.canvas = {};
 var c;
 var stonepat;
-var termite_img;
+var termite_img_r, termite_img_b;
 
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -19,8 +19,11 @@ window.canvas.startLoop = function($canvas) {
         stonepat = c.createPattern(stonebg, "no-repeat");
     }
  
-    termite_img = new Image();
-    termite_img.src = "images/termite_maly.png";
+    termite_img_r = new Image();
+    termite_img_r.src = "images/termite_maly_r.png";
+
+    termite_img_b = new Image();
+    termite_img_b.src = "images/termite_maly_b.png";
 
     requestAnimationFrame(function() {
         window.canvas.loop();
@@ -85,13 +88,17 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
     var cx = window.canvas.width / 2;
     var cy = window.canvas.height / 2;
-    var width = termite_img.width;
-    var height = termite_img.height;
+    var width = termite_img_r.width;
+    var height = termite_img_r.height;
     
     c.save();
     c.translate(x+width/2, y+height/2);
     c.rotate(-dir+Math.PI);
-    c.drawImage(termite_img, -width/2, -height/2, width, height);
+    if(user.team == 0) {
+        c.drawImage(termite_img_r, -width/2, -height/2, width, height);
+    } else {
+        //c.drawImage(termite_img_b, -width/2, -height/2, width, height);
+    }
     c.restore();
     //c.strokeStyle = "#000";
 }
