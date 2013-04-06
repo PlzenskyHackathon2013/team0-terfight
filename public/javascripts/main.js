@@ -2,11 +2,9 @@ $(document).ready(function() {
 	socket = io.connect(document.domain);
 	socket.on("hello", function(data) {
 		helloData = data;
-	  	console.log(data);
 	});
 	socket.on("users", function(data) {
 	    usersData = data;
-	    console.log(data);
 	});
 
 	var $canvas = $("#canv");
@@ -69,7 +67,6 @@ dir_change = function(e) {
 
 	if (something_happened) {
 		socket.emit("move", { direction: my_direction });
-		console.log("emit move, direction: " + my_direction);
 	}
 
 	if (already_pressed.indexOf(SPACE) >= 0) {
