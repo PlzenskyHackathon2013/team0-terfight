@@ -1,6 +1,7 @@
 var _ = require('underscore');
 
-var DIM = 1000;
+var DIM = 1000,
+    SPEED = 5;
 
 var users = {},
     messages = {},
@@ -30,13 +31,15 @@ exports.send_info = function(socket) {
 
 function compute_new_positions() {
     _.each(users, function (user, id, list) {
-        var delta = compute_delta(messages[id]);
-        if (!in_stone({
-            'x': user.pos.x + delta.x,
-            'y': user.pos.y - delta.y
-        })) {
-            user.pos.x += delta.x;
-            user.pos.y -= delta.y;
+        if (!_.isEmpty(messages[id])) {
+            var delta = compute_delta(messages[id]);
+            if (!in_stone({
+                'x': user.pos.x + SPEED * delta.x,
+                'y': user.pos.y - SPEED * delta.y
+            })) {
+                user.pos.x += SPEED * delta.x;
+                user.pos.y -= SPEED * delta.y;
+            }
         }
     });
 
