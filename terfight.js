@@ -13,6 +13,7 @@ exports.new_connection = function(socket) {
 
     socket.on('disconnect', _.partial(disconnect, id));
     socket.on('move', _.partial(move_command, id));
+    socket.on('shot', _.partial(shot_command, id));
 }
 
 exports.send_info = function(socket) {
@@ -48,6 +49,10 @@ function move_command(id, data) {
         'x': Math.cos(data.direction),
         'y': Math.sin(data.direction)
     });
+}
+
+function shot_command(id, data) {
+
 }
 
 function compute_delta(messages) {
