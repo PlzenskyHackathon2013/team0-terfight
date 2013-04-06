@@ -1,6 +1,6 @@
 window.canvas = {};
 var c;
-
+var stonepat;
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                 window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -8,8 +8,15 @@ var c;
   })();
 
 window.canvas.startLoop = function($canvas) {
-  window.canvas.$canvas = $canvas;
-  c = window.canvas.$canvas.get(0).getContext("2d");
+    window.canvas.$canvas = $canvas;
+    c = window.canvas.$canvas.get(0).getContext("2d");
+
+    var stonebg = new Image();
+    stonebg.src = "images/stone.jpg";
+    stonebg.onload = function() {
+        stonepat = c.createPattern(stonebg, "no-repeat");
+    }
+ 
   requestAnimationFrame(function() {
     window.canvas.loop();
   });
@@ -70,7 +77,8 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (c, rock, cPos) {
-  c.fillStyle = "#aaa";
+  
+  c.fillStyle = stonepat;
   c.lineWidth = 1;
 
   c.beginPath();
