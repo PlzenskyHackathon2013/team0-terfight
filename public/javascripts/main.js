@@ -1,4 +1,12 @@
 $(document).ready(function() {
+	socket = io.connect(document.domain);
+	socket.on("hello", function(data) {
+	  	console.log(data);
+	});
+	socket.on("users", function(data) {
+	    console.log(data);
+	});
+
 	var $canvas = $("#canv");
 	var canvas = $canvas.get(0);
 	
@@ -6,7 +14,7 @@ $(document).ready(function() {
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 	};
-	
+
 	$(window).resize(canvasSizeUpdate);
 	canvasSizeUpdate();
 
@@ -22,9 +30,10 @@ $(document).keydown(function(e) {
 
 	already_pressed.push(e.which);
 
+	old_direction = my_direction;
     if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
-    	my_direction = 3/4*Math.PI;  
-    }  
+    	my_direction = 3/4*Math.PI;
+    }
     else if (already_pressed.indexOf(38) >= 0) {
 		my_direction = Math.PI;
 	}
@@ -37,6 +46,11 @@ $(document).keydown(function(e) {
 	else if (e.which == 37) {
 		my_direction = 3/2*Math.PI;
 	};
+
+	if (old_direction != my_direction) {
+		socket.emit("move", { direction: my_direction });
+		console.log("emit move, direction: " + my_direction);
+	};
 });
 $(document).keyup(function(e) {
 	for (var i=0; i<already_pressed.length; i++) {
@@ -46,6 +60,7 @@ $(document).keyup(function(e) {
 		}
 	};
 });
+
 
 window.main = {};
 
