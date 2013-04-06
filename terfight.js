@@ -3,15 +3,16 @@ var _ = require('underscore');
 var DIM = 1000,
     SPEED = 2,
     MAX_DISTANCE = 300,
-    TOO_CLOSE = 20,
-    MAX_LIFE = 5,
+    TOO_CLOSE = 50,
     SHOT_SPEED = 5;
 
 var users = {},
     messages = {},
     next_id = 0,
     stones = {},
-    shots = [];
+    shots = [],
+    red_score = 0,
+    blue_score = 0;
 
 exports.new_connection = function(socket) {
     if (_.isEmpty(users)) {
@@ -30,6 +31,8 @@ exports.send_info = function(socket) {
 
     socket.emit('users', {
         'number': _.size(users),
+        'red_score': red_score,
+        'blue_score': blue_score,
         'users': users,
         'shots': shots
     });
@@ -48,12 +51,26 @@ exports.update_shots = function() {
             return false;
         }
 
+        var killed = false
         _.each(users, function(user) {
-            if (dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
-                user.life--;
-                return false;
+            if (shot.user != user.id &&
+                dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
+
+                dead(user);
+
+                if (users[shot.user].team == 0) {
+                    red_score++;
+                } else {
+                    blue_score++;
+                }
+
+                killed = true;
             }
         });
+
+        if (killed) {
+            return false;
+        }
 
         return true;
     });
@@ -61,6 +78,10 @@ exports.update_shots = function() {
 
 function dist(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+}
+
+function dead(user) {
+    user.pos = new_spawn_point();
 }
 
 function compute_new_positions() {
@@ -96,6 +117,7 @@ function move_command(id, data) {
 function shot_command(id, data) {
     var user = users[id];
     shots.push({
+        'user': user.id,
         'x': user.pos.x,
         'y': user.pos.y,
         'start_x': user.pos.x,
@@ -185,13 +207,11 @@ function new_player(socket) {
     var id = next_id++;
 
     users[id] = {
-        'score': 0,
+        'id': id,
         'pos': new_spawn_point(),
         'direction': 0,
-        'life': MAX_LIFE,
         'team': Math.round(Math.random())
     };
-
 
     socket.emit("hello", {
         "id": id,
