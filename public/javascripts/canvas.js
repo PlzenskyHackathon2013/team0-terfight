@@ -1,6 +1,6 @@
 window.canvas = {};
 var c;
-
+var stonepat;
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                 window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -8,12 +8,22 @@ var c;
   })();
 
 window.canvas.startLoop = function($canvas) {
-  window.canvas.$canvas = $canvas;
-  c = window.canvas.$canvas.get(0).getContext("2d");
+    window.canvas.$canvas = $canvas;
+    c = window.canvas.$canvas.get(0).getContext("2d");
+
+    var stonebg = new Image();
+    stonebg.src = "images/stone.jpg";
+    stonebg.onload = function() {
+        stonepat = c.createPattern(stonebg, "no-repeat");
+    }
+ 
   requestAnimationFrame(function() {
     window.canvas.loop();
   });
 }
+
+lastPos = { x: -1, y: -1 };
+backgroundPos = { x: 0, y: 0 };
 
 window.canvas.loop = function () {
   if (typeof usersData === "undefined") {
@@ -21,18 +31,18 @@ window.canvas.loop = function () {
     requestAnimationFrame(canvas.loop);
     return;
   }
-// $("body").css("background-position: 5px 8px");
- c.clearRect(0,0, c.canvas.width, c.canvas.height);
-/*  var grass = new Image();
-  grass.onload = function() {
-    c.drawImage(grass, 0, 0);
-  }
-  grass.src = "images/grass.jpg";
-*/
-  //c.fillStyle = "#0f0";
-  //c.fillRect(0, 0, window.canvas.$canvas.width(), window.canvas.$canvas.height());
 
+  c.clearRect(0,0, c.canvas.width, c.canvas.height);
+
+  // background move
   var cPos = usersData.users[helloData.id].pos;
+  backgroundPos.x += lastPos.x - cPos.x;
+  backgroundPos.y += lastPos.y - cPos.y;
+
+  lastPos = { x: cPos.x, y: cPos.y };
+
+  $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
+
 
   for (var userId in usersData.users)
   {
@@ -70,14 +80,17 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (c, rock, cPos) {
-  c.fillStyle = "#aaa";
+  
+  c.fillStyle = stonepat;
   c.lineWidth = 1;
 
   c.beginPath();
 
-  c.moveTo(rock.l[0].x - cPos.x, rock.l[1].y - cPos.y);
+  c.moveTo(rock.l[0].x - cPos.x  + window.canvas.$canvas.width()/2,
+    rock.l[0].y - cPos.y + window.canvas.$canvas.height()/2);
   for (var i=1; i<rock.l.length; i++) {
-    c.lineTo(rock.l[i].x - cPos.x, rock.l[i].y - cPos.y);
+    c.lineTo(rock.l[i].x - cPos.x + window.canvas.$canvas.width()/2,
+      rock.l[i].y - cPos.y + window.canvas.$canvas.height()/2);
   };
 
   c.closePath();
