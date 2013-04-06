@@ -8,15 +8,22 @@
           #canv {
               position: absolute;
               left: 0; top: 0;
+              z-index: 0;
           }
-
-          body {
+          
+          #bg {
+              position: absolute;
+              left: 0; top: 0;
+              z-index: -5;
+          }
+          /* body {
               background-image: url("images/grass.jpg");
-          }
+          } */
       </style>
   </head>
   <body>
       <canvas id="canv"></canvas>
+      <canvas id="bg"></canvas>
 
       <script src="javascripts/jquery-1.9.1.min.js"></script>
       <script src="javascripts/main.js"></script>

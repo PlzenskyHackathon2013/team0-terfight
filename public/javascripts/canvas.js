@@ -1,7 +1,8 @@
 window.canvas = {};
-var c;
-var stonepat;
+var c, b;
+var stonepat, grasspat;
 var termite_img_r, termite_img_b;
+var bgdone = false;
 
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -9,16 +10,23 @@ var termite_img_r, termite_img_b;
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-window.canvas.startLoop = function($canvas) {
+window.canvas.startLoop = function($canvas, $bg) {
     window.canvas.$canvas = $canvas;
+    window.canvas.$bg = $bg;
     c = window.canvas.$canvas.get(0).getContext("2d");
-
+    b = window.canvas.$bg.get(0).getContext("2d");
+   
     var stonebg = new Image();
     stonebg.src = "images/stone.jpg";
     stonebg.onload = function() {
         stonepat = c.createPattern(stonebg, "repeat");
     }
- 
+    var grassbg = new Image();
+    grassbg.src = "images/grass.jpg";
+    grassbg.onload = function() {
+        grasspat = c.createPattern(grassbg, "repeat");
+    }
+     
     termite_img_r = new Image();
     termite_img_r.src = "images/termite_maly_r.png";
 
@@ -33,41 +41,66 @@ window.canvas.startLoop = function($canvas) {
 lastPos = { x: -1, y: -1 };
 backgroundPos = { x: 0, y: 0 };
 
+window.canvas.bgbuild = function () {
+    // background move
+
+    // var cPos = usersData.users[helloData.id].pos;
+    // backgroundPos.x += lastPos.x - cPos.x;
+    // backgroundPos.y += lastPos.y - cPos.y;
+
+    // lastPos = { x: cPos.x, y: cPos.y };
+
+    // $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
+
+    // borders
+    b.lineWidth = 6;
+    b.fillStyle = grasspat;
+    b.strokeRect(0, 0, helloData.size.width, helloData.size.height);
+    b.fillRect(0, 0, helloData.size.width, helloData.size.height);
+    lastPos = usersData.users[helloData.id].pos;
+    backgroundPos = lastPos;
+    backgroundPos.x -= b.canvas.width/2;
+    backgroundPos.y -= b.canvas.height/2;
+
+//document.title = cPos.x + " - " + cPos.y;
+
+    for (var i = 0; i < helloData.stones.l.length; i++)
+    {
+        var rock = helloData.stones.l[i];
+        window.canvas.drawRock(rock);
+    }
+
+}
+
 window.canvas.loop = function () {
     if (typeof usersData === "undefined") {
         // data are not yet available
         requestAnimationFrame(canvas.loop);
         return;
     }
-
+    
+    if(!bgdone)
+        window.canvas.bgbuild();
+    bgdone = true;
+    
     c.clearRect(0,0, c.canvas.width, c.canvas.height);
-
-    // background move
     var cPos = usersData.users[helloData.id].pos;
-    backgroundPos.x += lastPos.x - cPos.x;
-    backgroundPos.y += lastPos.y - cPos.y;
-
+    //backgroundPos.x += lastPos.x - cPos.x;
+    //backgroundPos.y += lastPos.y - cPos.y;
+  
+    var bPos = { x: cPos.x - c.canvas.width/2, y: cPos.y - c.canvas.height/2};
+    window.canvas.$bg.css("left", -bPos.x + "px ");
+    window.canvas.$bg.css("top", -bPos.y + "px ");
     lastPos = { x: cPos.x, y: cPos.y };
 
-    $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
+    //$("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
 
-
-    // borders
-    c.lineWidth = 6;
-    c.strokeRect(-cPos.x+c.canvas.width/2, -cPos.y+c.canvas.height/2, helloData.size.width, helloData.size.height);
-    document.title = cPos.x + " - " + cPos.y;
 
 
     for (var userId in usersData.users)
     {
         var user = usersData.users[userId];
         window.canvas.drawAnt(c, user, cPos);
-    }
-
-    for (var i = 0; i < helloData.stones.l.length; i++)
-    {
-        var rock = helloData.stones.l[i];
-        window.canvas.drawRock(c, rock, cPos);
     }
 
     for (var i = 0; i < usersData.shots.length; i++) {
@@ -109,37 +142,21 @@ window.canvas.drawAnt = function (c, user, cPos) {
 }
 
 ROCK_DIAMETER = 20;
-window.canvas.drawRock = function (c, rock, cPos) {
-    // do we need to draw this?
-    to_draw = false;
-    for (var i=0; i<rock.l.length; i++)
-    {
-        v = rock.l[i];
-        if (v.x > -50 || v.y > -50 || v.x < window.canvas.width+50 ||
-                    v.y < window.canvas.height+50) {
-            to_draw = true;
-        }
-    }
-    if (!to_draw) {
-        return;
-    }
+window.canvas.drawRock = function (rock) {
+    
+    b.fillStyle = stonepat;
+    b.lineWidth = 1;
 
-    // ok, let's do it
-    c.fillStyle = stonepat;
-    c.lineWidth = 1;
+    b.beginPath();
 
-    c.beginPath();
-
-    c.moveTo(rock.l[0].x - cPos.x    + window.canvas.$canvas.width()/2,
-        rock.l[0].y - cPos.y + window.canvas.$canvas.height()/2);
+    b.moveTo(rock.l[0].x, rock.l[0].y);
     for (var i=1; i<rock.l.length; i++) {
-        c.lineTo(rock.l[i].x - cPos.x + window.canvas.$canvas.width()/2,
-            rock.l[i].y - cPos.y + window.canvas.$canvas.height()/2);
-    };
+        b.lineTo(rock.l[i].x, rock.l[i].y);
+    }
 
-    c.closePath();
-    c.fill();
-    c.stroke();
+    b.closePath();
+    b.fill();
+    b.stroke();
 }
 
 SHOT_RADIUS = 4;
