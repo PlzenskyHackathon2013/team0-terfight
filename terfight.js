@@ -48,12 +48,17 @@ exports.update_shots = function() {
             return false;
         }
 
+        var killed = false
         _.each(users, function(user) {
             if (dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
                 user.life--;
-                return false;
+                killed = true;
             }
         });
+
+        if (killed) {
+            return false;
+        }
 
         return true;
     });
