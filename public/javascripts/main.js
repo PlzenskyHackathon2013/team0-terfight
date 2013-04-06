@@ -28,7 +28,7 @@ var UP = 38,
     LEFT = 37,
     DOWN = 40,
     RIGHT = 39,
-    SPACE = 32;
+    Q_KEY = 81;
 
 var KEY_DOWN = 1,
     KEY_UP = 2,
@@ -72,7 +72,7 @@ dir_change = function(when) {
 		socket.emit("move", { direction: my_direction });
 	}
 
-	if (when === KEY_DOWN && already_pressed.indexOf(SPACE) >= 0) {
+	if (when === KEY_DOWN && already_pressed.indexOf(Q_KEY) >= 0) {
 		socket.emit("fire", {});
 		console.log("fire");
 	}
