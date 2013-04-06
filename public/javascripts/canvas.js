@@ -70,7 +70,7 @@ window.canvas.loop = function () {
 
     for (var i = 0; i < usersData.shots.length; i++) {
         var shot = usersData.shots[i];
-        window.canvas.drawShot(c, shot, cPos);
+        window.canvas.drawShot(c, shot, cPos, usersData.users[userId]);
     }
 
     c.font = 'bold 40pt arial';
@@ -159,7 +159,7 @@ window.canvas.drawRock = function (c, rock, cPos) {
 }
 
 SHOT_RADIUS = 4;
-window.canvas.drawShot = function(c, shot, cPos) {
+window.canvas.drawShot = function(c, shot, cPos, user) {
     x = shot.x - cPos.x + window.canvas.$canvas.width()/2;
     y = shot.y - cPos.y + window.canvas.$canvas.height()/2;
 
@@ -170,7 +170,7 @@ window.canvas.drawShot = function(c, shot, cPos) {
     c.beginPath();
     c.arc(x, y, 4, 0, 2*Math.PI, false);
     c.closePath();
-    c.fillStyle = "red";
+    c.fillStyle = (user.team === 0 ? "red" : "blue");
     c.fill();
     c.lineWidth = 2;
     c.strokeStyle = "black";
