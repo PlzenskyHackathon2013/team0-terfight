@@ -49,3 +49,4 @@ io.sockets.on('connection', terfight.new_connection);
 
 // Terfight specific
 setInterval(terfight.send_info, 20, io.sockets);
+setInterval(terfight.update_shots, 10);
