@@ -61,9 +61,17 @@ exports.update_shots = function() {
                 dead(user);
 
                 if (users[shot.user].team == 0) {
-                    red_score++;
+                    if (user.team == 0) {
+                        red_score--;
+                    } else {
+                        red_score++;
+                    }
                 } else {
-                    blue_score++;
+                    if (user.team == 1) {
+                        blue_score--;
+                    } else {
+                        blue_score++;
+                    }
                 }
 
                 killed = true;
