@@ -1,4 +1,10 @@
-window.canvas = {}
+window.canvas = {};
+
+  (function() {
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+  })();
 
 window.canvas.startLoop = function($canvas) {
   window.canvas.$canvas = $canvas;
@@ -29,12 +35,6 @@ window.canvas.loop = function () {
     var rock = canvas.rocks[i];
     window.canvas.drawRock(c, rock);
   }
-
-  (function() {
-    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-    window.requestAnimationFrame = requestAnimationFrame;
-  })();
 
   requestAnimationFrame(canvas.loop);
 }
