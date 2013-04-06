@@ -73,13 +73,11 @@ window.canvas.loop = function () {
         window.canvas.drawShot(c, shot, cPos);
     }
 
-    c.font = 'bold 40pt arial';
+    c.font = 'bold 50pt arial';
     c.fillStyle = "#FF0000";
-    c.fillText('' + usersData.red_score, 10, 50);
-    c.fillStyle = "#000000";
-    c.fillText(' : ', 30, 50);
+    c.fillText('' + usersData.red_score, 10, 60);
     c.fillStyle = "#0000FF";
-    c.fillText('' + usersData.blue_score, 70, 50);
+    c.fillText('' + usersData.blue_score, 10, 120);
 
     requestAnimationFrame(canvas.loop);
 }
