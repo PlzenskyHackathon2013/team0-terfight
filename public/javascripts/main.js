@@ -21,8 +21,51 @@ $(document).ready(function() {
 	window.canvas.startLoop($canvas);
 });
 
-my_direction = Math.PI;
-already_pressed = [];
+var my_direction = Math.PI;
+var already_pressed = [];
+
+dir_change = function(e) {
+	something_happened = true;
+    if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
+    	my_direction = 3/4*Math.PI;
+    }
+    else if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(37) >=0)) {
+    	my_direction = 5/4*Math.PI;
+    }
+    else if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
+    	my_direction = 1/4*Math.PI;  
+    }
+    else if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(37) >= 0)){ 
+    	my_direction = 7/4*Math.PI;  
+    }
+    else if (already_pressed.indexOf(38) >= 0) {
+		my_direction = Math.PI;
+	}
+	else if (already_pressed.indexOf(39) >= 0) {
+		my_direction = Math.PI / 2;
+	}
+	else if (already_pressed.indexOf(40) >= 0) {
+		my_direction = 0;
+	}
+	else if (already_pressed.indexOf(37) >= 0) {
+		my_direction = 3/2*Math.PI;
+	}
+	else
+	{
+		something_happened = false;
+	};
+
+	if (something_happened) {
+		socket.emit("move", { direction: my_direction });
+		console.log("emit move, direction: " + my_direction);
+	}
+
+	if (already_pressed.indexOf(32) >= 0) {
+		socket.emit("fire", {});
+		console.log("fire");
+	}
+};
+
 $(document).keydown(function(e) {
 	if (already_pressed.indexOf(e.which) != -1) {
 		return;
@@ -30,36 +73,7 @@ $(document).keydown(function(e) {
 
 	already_pressed.push(e.which);
 
-	old_direction = my_direction;
-    if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
-    	my_direction = 3/4*Math.PI;  
-    }
-    if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(37) >=0)) {
-    	my_direction = 5/4*Math.Pi;
-    }
-    if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
-    	my_direction = 1/4*Math.PI;  
-    }
-    if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(37) >= 0)){ 
-    	my_direction = 7/4*Math.PI;  
-    }
-    else if (already_pressed.indexOf(38) >= 0) {
-		my_direction = Math.PI;
-	}
-	else if (e.which == 39) {
-		my_direction = Math.PI / 2;
-	}
-	else if (e.which == 40) {
-		my_direction = 0;
-	}
-	else if (e.which == 37) {
-		my_direction = 3/2*Math.PI;
-	};
-
-	if (old_direction != my_direction) {
-		socket.emit("move", { direction: my_direction });
-		console.log("emit move, direction: " + my_direction);
-	};
+	dir_change(e);
 });
 $(document).keyup(function(e) {
 	for (var i=0; i<already_pressed.length; i++) {
@@ -68,6 +82,8 @@ $(document).keyup(function(e) {
 			break;
 		}
 	};
+
+	dir_change(e);
 });
 
 
