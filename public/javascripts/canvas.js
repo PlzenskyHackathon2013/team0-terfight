@@ -15,13 +15,9 @@ window.canvas.startLoop = function($canvas) {
   });
 }
 
-window.canvas.rocks = [
-    { x: 200, y: 200 },
-    { x: 250, y: 200 }
-  ];
-
 lastPos = { x: -1, y: -1 };
 backgroundPos = { x: 0, y: 0 };
+
 window.canvas.loop = function () {
   if (typeof usersData === "undefined") {
     // data are not yet available
@@ -29,7 +25,7 @@ window.canvas.loop = function () {
     return;
   }
 
-  c.clearRect(0, 0, c.canvas.width, c.canvas.height);
+  c.clearRect(0,0, c.canvas.width, c.canvas.height);
 
   // background move
   var cPos = usersData.users[helloData.id].pos;
