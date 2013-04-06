@@ -33,10 +33,11 @@ function compute_new_positions() {
     _.each(users, function (user, id, list) {
         if (!_.isEmpty(messages[id])) {
             var delta = compute_delta(messages[id]);
-            if (!in_stone({
+            var new_pos = {
                 'x': user.pos.x + SPEED * delta.x,
                 'y': user.pos.y - SPEED * delta.y
-            })) {
+            };
+            if (!in_stone(new_pos) && !trespass(new_pos)) {
                 user.pos.x += SPEED * delta.x;
                 user.pos.y -= SPEED * delta.y;
             }
@@ -88,6 +89,10 @@ function in_stone(pos) {
     });
 
     return ins;
+}
+
+function trespass(pos) {
+    return pos.x < 0 || pos.y < 0 || pos.x > DIM || pos.y > DIM;
 }
 
 function compute_delta(messages) {
@@ -149,7 +154,11 @@ function new_player(socket) {
         "id": id,
         "pos": users[id].pos,
         "direction": users[id].direction,
-        "stones" : stones
+        "stones" : stones,
+        "size": {
+            "width": DIM,
+            "height": DIM
+        }
     });
 
     return id;
