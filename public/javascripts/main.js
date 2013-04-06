@@ -9,20 +9,16 @@ $(document).ready(function() {
 
 	var $canvas = $("#canv");
 	var canvas = $canvas.get(0);
-	var $bg = $("#bg");
-	var bg = $bg.get(0);
 	
 	canvasSizeUpdate = function() {
 		canvas.width = window.innerWidth;
-        bg.width = canvas.width;
 		canvas.height = window.innerHeight;
-        bg.height = canvas.height;
 	};
 
 	$(window).resize(canvasSizeUpdate);
 	canvasSizeUpdate();
 
-	window.canvas.startLoop($canvas, $bg);
+	window.canvas.startLoop($canvas, $("#bg"));
 });
 
 var my_direction = Math.PI;

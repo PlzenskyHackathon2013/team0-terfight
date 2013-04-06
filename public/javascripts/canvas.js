@@ -13,8 +13,8 @@ var bgdone = false;
 window.canvas.startLoop = function($canvas, $bg) {
     window.canvas.$canvas = $canvas;
     window.canvas.$bg = $bg;
+    window.canvas.bg = $bg.get(0);
     c = window.canvas.$canvas.get(0).getContext("2d");
-    b = window.canvas.$bg.get(0).getContext("2d");
    
     var stonebg = new Image();
     stonebg.src = "images/stone.jpg";
@@ -42,34 +42,21 @@ lastPos = { x: -1, y: -1 };
 backgroundPos = { x: 0, y: 0 };
 
 window.canvas.bgbuild = function () {
-    // background move
+    window.canvas.bg.width = helloData.size.width;
+    window.canvas.bg.height = helloData.size.height;
 
-    // var cPos = usersData.users[helloData.id].pos;
-    // backgroundPos.x += lastPos.x - cPos.x;
-    // backgroundPos.y += lastPos.y - cPos.y;
+    b = window.canvas.$bg.get(0).getContext("2d");
 
-    // lastPos = { x: cPos.x, y: cPos.y };
-
-    // $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
-
-    // borders
     b.lineWidth = 6;
     b.fillStyle = grasspat;
     b.strokeRect(0, 0, helloData.size.width, helloData.size.height);
     b.fillRect(0, 0, helloData.size.width, helloData.size.height);
-    lastPos = usersData.users[helloData.id].pos;
-    backgroundPos = lastPos;
-    backgroundPos.x -= b.canvas.width/2;
-    backgroundPos.y -= b.canvas.height/2;
-
-//document.title = cPos.x + " - " + cPos.y;
 
     for (var i = 0; i < helloData.stones.l.length; i++)
     {
         var rock = helloData.stones.l[i];
         window.canvas.drawRock(rock);
     }
-
 }
 
 window.canvas.loop = function () {
@@ -79,21 +66,20 @@ window.canvas.loop = function () {
         return;
     }
     
-    if(!bgdone)
+    if (!bgdone)
+    {
         window.canvas.bgbuild();
-    bgdone = true;
-    
-    c.clearRect(0,0, c.canvas.width, c.canvas.height);
-    var cPos = usersData.users[helloData.id].pos;
-    //backgroundPos.x += lastPos.x - cPos.x;
-    //backgroundPos.y += lastPos.y - cPos.y;
-  
-    var bPos = { x: cPos.x - c.canvas.width/2, y: cPos.y - c.canvas.height/2};
-    window.canvas.$bg.css("left", -bPos.x + "px ");
-    window.canvas.$bg.css("top", -bPos.y + "px ");
-    lastPos = { x: cPos.x, y: cPos.y };
+        bgdone = true;
 
-    //$("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
+        requestAnimationFrame(canvas.loop);
+        return;
+    }
+    
+    c.clearRect(0, 0, c.canvas.width, c.canvas.height);
+    var cPos = usersData.users[helloData.id].pos;
+  
+    window.canvas.$bg.css("left", -(cPos.x - c.canvas.width/2) + "px");
+    window.canvas.$bg.css("top", -(cPos.y - c.canvas.height/2) + "px");
 
     for (var userId in usersData.users)
     {
@@ -157,7 +143,6 @@ fix_head = function(dir, width, height) {
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (rock) {
-    
     b.fillStyle = stonepat;
     b.lineWidth = 1;
 
