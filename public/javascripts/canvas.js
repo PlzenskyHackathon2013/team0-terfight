@@ -1,4 +1,5 @@
 window.canvas = {};
+var c;
 
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -8,6 +9,7 @@ window.canvas = {};
 
 window.canvas.startLoop = function($canvas) {
   window.canvas.$canvas = $canvas;
+  c = window.canvas.$canvas.get(0).getContext("2d");
   requestAnimationFrame(function() {
     window.canvas.loop();
   });
@@ -25,10 +27,15 @@ window.canvas.loop = function () {
     return;
   }
 
-  c = window.canvas.$canvas.get(0).getContext("2d");
-
-  c.fillStyle = "#0f0";
-  c.fillRect(0, 0, window.canvas.$canvas.width(), window.canvas.$canvas.height());
+ c.clearRect(0,0, c.canvas.width, c.canvas.height);
+/*  var grass = new Image();
+  grass.onload = function() {
+    c.drawImage(grass, 0, 0);
+  }
+  grass.src = "images/grass.jpg";
+*/
+  //c.fillStyle = "#0f0";
+  //c.fillRect(0, 0, window.canvas.$canvas.width(), window.canvas.$canvas.height());
 
   var cPos;
   for (var userId in usersData.users)

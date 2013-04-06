@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var DIM = 100;
+var DIM = 1000;
 var users = {};
 var messages = {};
 var next_id = 0;
