@@ -3,7 +3,7 @@ var _ = require('underscore');
 var DIM = 1000,
     SPEED = 2,
     MAX_DISTANCE = 300,
-    TOO_CLOSE = 50,
+    TOO_CLOSE = 20,
     SHOT_SPEED = 5;
 
 var users = {},
@@ -54,7 +54,7 @@ exports.update_shots = function() {
         var killed = false
         _.each(users, function(user) {
             if (shot.user != user.id &&
-                dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
+                dist(shot.x, shot.y, user.pos.x + correction.x, user.pos.y + correction.y) < TOO_CLOSE) {
 
                 dead(user);
 
