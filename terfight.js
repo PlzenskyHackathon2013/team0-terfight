@@ -50,7 +50,8 @@ exports.update_shots = function() {
 
         var killed = false
         _.each(users, function(user) {
-            if (dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
+            if (shot.user != user.id &&
+                dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
                 user.life--;
                 killed = true;
             }
@@ -101,6 +102,7 @@ function move_command(id, data) {
 function shot_command(id, data) {
     var user = users[id];
     shots.push({
+        'user': user.id,
         'x': user.pos.x,
         'y': user.pos.y,
         'start_x': user.pos.x,
@@ -190,13 +192,13 @@ function new_player(socket) {
     var id = next_id++;
 
     users[id] = {
+        'id': id,
         'score': 0,
         'pos': new_spawn_point(),
         'direction': 0,
         'life': MAX_LIFE,
         'team': Math.round(Math.random())
     };
-
 
     socket.emit("hello", {
         "id": id,
