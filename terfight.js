@@ -77,6 +77,7 @@ function compute_new_positions() {
                 'x': user.pos.x + SPEED * delta.x,
                 'y': user.pos.y - SPEED * delta.y
             };
+            new_pos = { x: new_pos.x+correction.x, y: new_pos.y+correction.y };
             if (!in_stone(new_pos) && !trespass(new_pos)) {
                 user.pos.x += SPEED * delta.x;
                 user.pos.y -= SPEED * delta.y;
@@ -87,7 +88,10 @@ function compute_new_positions() {
     messages = {};
 }
 
+correction = undefined;
 function move_command(id, data) {
+    correction = data.correction;
+
     if (!_.has(messages, id)) {
         messages[id] = [];
     }
@@ -100,13 +104,15 @@ function move_command(id, data) {
 }
 
 function shot_command(id, data) {
+    correction = data.correction;
+
     var user = users[id];
     shots.push({
         'user': user.id,
-        'x': user.pos.x,
-        'y': user.pos.y,
-        'start_x': user.pos.x,
-        'start_y': user.pos.y,
+        'x': user.pos.x+correction.x,
+        'y': user.pos.y+correction.y,
+        'start_x': user.pos.x+correction.x,
+        'start_y': user.pos.y+correction.y,
         'direction': user.direction
     });
 }
