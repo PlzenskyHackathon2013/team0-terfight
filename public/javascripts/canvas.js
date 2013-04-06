@@ -102,7 +102,7 @@ window.canvas.drawAnt = function (c, user, cPos) {
     if(user.team == 0) {
         c.drawImage(termite_img_r, -width/2, -height/2, width, height);
     } else {
-        //c.drawImage(termite_img_b, -width/2, -height/2, width, height);
+        c.drawImage(termite_img_b, -width/2, -height/2, width, height);
     }
     c.restore();
     //c.strokeStyle = "#000";
