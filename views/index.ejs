@@ -12,6 +12,7 @@
           socket.on("users", function(data) {
               console.log(data);
           });
+          socket.emit("move", {'direction': 0});
       </script>
       <style>
           #canv {
@@ -22,7 +23,7 @@
   </head>
   <body>
       <canvas id="canv"></canvas>
-  
+
       <script src="javascripts/jquery-1.9.1.min.js"></script>
       <script src="javascripts/main.js"></script>
       <script src="javascripts/canvas.js"></script>
