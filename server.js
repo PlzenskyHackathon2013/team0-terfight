@@ -15,7 +15,7 @@ var app = express();
 
 // all environments
 app.set('domain', process.env.OPENSHIFT_INTERNAL_IP || '0.0.0.0');
-app.set('port', 8000);//process.env.OPENSHIFT_INTERNAL_PORT || 3000);
+app.set('port', process.env.OPENSHIFT_INTERNAL_PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
