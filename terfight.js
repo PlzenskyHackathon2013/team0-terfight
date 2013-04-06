@@ -1,7 +1,11 @@
 var _ = require('underscore');
 
 var DIM = 1000,
-    SPEED = 2;
+    SPEED = 2,
+    MAX_DISTANCE = 100,
+    TOO_CLOSE = 20,
+    MAX_LIFE = 5,
+    SHOT_SPEED = 5;
 
 var users = {},
     messages = {},
@@ -18,7 +22,7 @@ exports.new_connection = function(socket) {
 
     socket.on('disconnect', _.partial(disconnect, id));
     socket.on('move', _.partial(move_command, id));
-    socket.on('shot', shot_command);
+    socket.on('fire', _.partial(shot_command, id));
 }
 
 exports.send_info = function(socket) {
@@ -26,16 +30,41 @@ exports.send_info = function(socket) {
 
     socket.emit('users', {
         'number': _.size(users),
-        'users': users
+        'users': users,
+        'shots': shots
     });
 }
 
 exports.update_shots = function() {
-    _.each()
+    shots = _.filter(shots, function(shot) {
+        shot.x += SHOT_SPEED * Math.cos(shot.direction);
+        shot.y -= SHOT_SPEED * Math.sin(shot.direction);
+
+        if (dist(shot.x, shot.y, shot.start_x, shot.start_y) > MAX_DISTANCE) {
+            return false;
+        }
+
+        if (in_stone(shot)) {
+            return false;
+        }
+
+        _.each(users, function(user) {
+            if (dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
+                user.life--;
+                return false;
+            }
+        });
+
+        return true;
+    });
+}
+
+function dist(x1, y1, x2, y2) {
+    return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
 function compute_new_positions() {
-    _.each(users, function (user, id, list) {
+    _.each(users, function (user, id) {
         if (!_.isEmpty(messages[id])) {
             var delta = compute_delta(messages[id]);
             var new_pos = {
@@ -64,17 +93,20 @@ function move_command(id, data) {
     users[id].direction = data.direction;
 }
 
-function shot_command(data) {
+function shot_command(id, data) {
+    var user = users[id];
     shots.push({
-        'x': data.x,
-        'y': data.y,
-        'direction': data.direction
+        'x': user.pos.x,
+        'y': user.pos.y,
+        'start_x': user.pos.x,
+        'start_y': user.pos.y,
+        'direction': user.direction
     });
 }
 
 function in_stone(pos) {
     var ins = false;
-    _.each(stones.l, function(stone, index, list) {
+    _.each(stones.l, function(stone) {
         var count = 0;
         for (var i = 0; i < stone.vertices; i++) {
             var n = (i+1) % stone.vertices;
@@ -155,7 +187,8 @@ function new_player(socket) {
     users[id] = {
         'score': 0,
         'pos': new_spawn_point(),
-        'direction': 0
+        'direction': 0,
+        'life': MAX_LIFE
     };
 
 
