@@ -144,13 +144,15 @@ window.canvas.drawRock = function (c, rock, cPos) {
 
 SHOT_RADIUS = 4;
 window.canvas.drawShot = function(c, shot, cPos) {
-    if (shot.x < 0 || shot.y < 0 || shot.x > window.canvas.$canvas.width() || shot.y > window.canvas.$canvas.height()) {
+    x = shot.x - cPos.x + window.canvas.$canvas.width()/2;
+    y = shot.y - cPos.y + window.canvas.$canvas.height()/2;
+
+    if (x < 0 || y < 0 || x > window.canvas.$canvas.width() || y > window.canvas.$canvas.height()) {
         return;
     }
 
     c.beginPath();
-    c.arc(shot.x - cPos.x + window.canvas.$canvas.width()/2,
-        shot.y - cPos.y + window.canvas.$canvas.height()/2, 4, 0, 2*Math.PI, false);
+    c.arc(x, y, 4, 0, 2*Math.PI, false);
     c.closePath();
     c.fillStyle = "red";
     c.fill();
