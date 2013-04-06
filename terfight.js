@@ -12,7 +12,9 @@ var users = {},
     stones = {},
     shots = [],
     red_score = 0,
-    blue_score = 0;
+    blue_score = 0,
+    red_count = 0,
+    blue_count = 0;
 
 exports.new_connection = function(socket) {
     if (_.isEmpty(users)) {
@@ -216,8 +218,14 @@ function new_player(socket) {
         'id': id,
         'pos': new_spawn_point(),
         'direction': 0,
-        'team': Math.round(Math.random())
+        'team': (red_count < blue_count) ? 0 : 1
     };
+
+    if (users[id].team == 0) {
+        red_count++;
+    } else {
+        blue_count++;
+    }
 
     socket.emit("hello", {
         "id": id,
@@ -234,5 +242,11 @@ function new_player(socket) {
 }
 
 function disconnect(id, socket) {
+    if (users[id].team == 0) {
+        red_count--;
+    } else {
+        blue_count--;
+    }
+
     users = _.omit(users, id.toString());
 }
