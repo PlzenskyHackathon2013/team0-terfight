@@ -55,8 +55,6 @@ window.canvas.loop = function () {
     // borders
     c.lineWidth = 6;
     c.strokeRect(-cPos.x+c.canvas.width/2, -cPos.y+c.canvas.height/2, helloData.size.width, helloData.size.height);
-    document.title = cPos.x + " - " + cPos.y;
-
 
     for (var userId in usersData.users)
     {
@@ -74,6 +72,14 @@ window.canvas.loop = function () {
         var shot = usersData.shots[i];
         window.canvas.drawShot(c, shot, cPos);
     }
+
+    c.font = 'bold 40pt arial';
+    c.fillStyle = "#FF0000";
+    c.fillText('' + usersData.red_score, 10, 50);
+    c.fillStyle = "#000000";
+    c.fillText(' : ', 30, 50);
+    c.fillStyle = "#0000FF";
+    c.fillText('' + usersData.blue_score, 70, 50);
 
     requestAnimationFrame(canvas.loop);
 }
