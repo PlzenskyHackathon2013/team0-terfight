@@ -196,8 +196,6 @@ function compute_delta(messages) {
     }, {'x': 0, 'y': 0});
 }
 
-// TODO: fix stones collisions
-// TODO: make stones not intersect with the edges of the screen, maybe.
 function new_game() {
     stones.no = 25+Math.floor(Math.random() * 10);
     stones.l = [];
@@ -222,6 +220,8 @@ function new_game() {
         }
         stones.l.push(stone);
     }
+    red_score = 0;
+    blue_score = 0;
 }
 
 function new_spawn_point() {
