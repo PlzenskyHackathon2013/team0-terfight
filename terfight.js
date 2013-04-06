@@ -72,17 +72,18 @@ function new_game() {
     {
         stone = {};
         stone.l = [];
-        stone.vertices = Math.floor(Math.random() * 10);
+        stone.vertices = 3 + Math.floor(Math.random() * 8);
         stone.diam = Math.floor(Math.random() * 100);
         stone.center = {};
         stone.center.x = Math.floor(Math.random() * DIM);
         stone.center.y = Math.floor(Math.random() * DIM);
-        for (var k = 0; k < stone.dimension; k++)
+        for (var k = 0; k < stone.vertices; k++)
         {
-            scale = Math.floor(0.2 + Math.random() * 0.8);
+            scale = 0.2 + Math.random() * 0.8;
             stone_next = {};
-            stone_next.x = stone.center.x + stone.diam*scale*Math.sin( (k%stone.dimension) * (Math.PI/k) );
-            stone_next.y = stone.center.y + stone.diam*scale*Math.cos( (k%stone.dimension) * (Math.PI/k) );
+            console.log(scale.toString());
+            stone_next.x = stone.center.x + Math.floor( stone.diam*scale*Math.sin( (k%stone.vertices) * (2*Math.PI/stone.vertices) ));
+            stone_next.y = stone.center.y + Math.floor( stone.diam*scale*Math.cos( (k%stone.vertices) * (2*Math.PI/stone.vertices) ));
             stone.l.push(stone_next);
         }
         stones.l.push(stone);
@@ -108,7 +109,8 @@ function new_player(socket) {
 
     socket.emit("hello", {
         "id": id,
-        "pos": users[id].pos
+        "pos": users[id].pos,
+        "stones" : stones
     });
 
     return id;
