@@ -13,7 +13,7 @@ var express = require('express')
 var app = express();
 
 // all environments
-app.set('domain', process.env.OPENSHIFT_INTERNAL_UP);
+app.set('domain', process.env.OPENSHIFT_INTERNAL_IP || '0.0.0.0');
 app.set('port', process.env.OPENSHIFT_INTERNAL_PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
