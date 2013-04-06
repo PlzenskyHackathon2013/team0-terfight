@@ -3,15 +3,18 @@ var _ = require('underscore');
 var DIM = 1000,
     SPEED = 2,
     MAX_DISTANCE = 300,
-    TOO_CLOSE = 50,
-    MAX_LIFE = 5,
+    TOO_CLOSE = 20,
     SHOT_SPEED = 5;
 
 var users = {},
     messages = {},
     next_id = 0,
     stones = {},
-    shots = [];
+    shots = [],
+    red_score = 0,
+    blue_score = 0,
+    red_count = 0,
+    blue_count = 0;
 
 exports.new_connection = function(socket) {
     if (_.isEmpty(users)) {
@@ -30,6 +33,8 @@ exports.send_info = function(socket) {
 
     socket.emit('users', {
         'number': _.size(users),
+        'red_score': red_score,
+        'blue_score': blue_score,
         'users': users,
         'shots': shots
     });
@@ -51,8 +56,24 @@ exports.update_shots = function() {
         var killed = false
         _.each(users, function(user) {
             if (shot.user != user.id &&
-                dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
-                user.life--;
+                dist(shot.x, shot.y, user.pos.x + correction.x, user.pos.y + correction.y) < TOO_CLOSE) {
+
+                dead(user);
+
+                if (users[shot.user].team == 0) {
+                    if (user.team == 0) {
+                        red_score--;
+                    } else {
+                        red_score++;
+                    }
+                } else {
+                    if (user.team == 1) {
+                        blue_score--;
+                    } else {
+                        blue_score++;
+                    }
+                }
+
                 killed = true;
             }
         });
@@ -69,6 +90,10 @@ function dist(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
+function dead(user) {
+    user.pos = new_spawn_point();
+}
+
 function compute_new_positions() {
     _.each(users, function (user, id) {
         if (!_.isEmpty(messages[id])) {
@@ -77,6 +102,7 @@ function compute_new_positions() {
                 'x': user.pos.x + SPEED * delta.x,
                 'y': user.pos.y - SPEED * delta.y
             };
+            new_pos = { x: new_pos.x+correction.x, y: new_pos.y+correction.y };
             if (!in_stone(new_pos) && !trespass(new_pos)) {
                 user.pos.x += SPEED * delta.x;
                 user.pos.y -= SPEED * delta.y;
@@ -87,7 +113,10 @@ function compute_new_positions() {
     messages = {};
 }
 
+correction = undefined;
 function move_command(id, data) {
+    correction = data.correction;
+
     if (!_.has(messages, id)) {
         messages[id] = [];
     }
@@ -100,13 +129,15 @@ function move_command(id, data) {
 }
 
 function shot_command(id, data) {
+    correction = data.correction;
+
     var user = users[id];
     shots.push({
         'user': user.id,
-        'x': user.pos.x,
-        'y': user.pos.y,
-        'start_x': user.pos.x,
-        'start_y': user.pos.y,
+        'x': user.pos.x+correction.x,
+        'y': user.pos.y+correction.y,
+        'start_x': user.pos.x+correction.x,
+        'start_y': user.pos.y+correction.y,
         'direction': user.direction
     });
 }
@@ -193,12 +224,16 @@ function new_player(socket) {
 
     users[id] = {
         'id': id,
-        'score': 0,
         'pos': new_spawn_point(),
         'direction': 0,
-        'life': MAX_LIFE,
-        'team': Math.round(Math.random())
+        'team': (red_count < blue_count) ? 0 : 1
     };
+
+    if (users[id].team == 0) {
+        red_count++;
+    } else {
+        blue_count++;
+    }
 
     socket.emit("hello", {
         "id": id,
@@ -215,5 +250,11 @@ function new_player(socket) {
 }
 
 function disconnect(id, socket) {
+    if (users[id].team == 0) {
+        red_count--;
+    } else {
+        blue_count--;
+    }
+
     users = _.omit(users, id.toString());
 }

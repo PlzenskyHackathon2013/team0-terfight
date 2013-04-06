@@ -73,11 +73,11 @@ dir_change = function(when) {
 	};
 
 	if (something_happened) {
-		socket.emit("move", { direction: my_direction });
+		socket.emit("move", { direction: my_direction, correction: correction });
 	}
 
 	if (when === KEY_DOWN && already_pressed.indexOf(Q_KEY) >= 0) {
-		socket.emit("fire", {});
+		socket.emit("fire", { correction: correction });
 		console.log("fire");
 	}
 };

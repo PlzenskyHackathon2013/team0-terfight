@@ -95,8 +95,6 @@ window.canvas.loop = function () {
 
     //$("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
 
-
-
     for (var userId in usersData.users)
     {
         var user = usersData.users[userId];
@@ -105,14 +103,21 @@ window.canvas.loop = function () {
 
     for (var i = 0; i < usersData.shots.length; i++) {
         var shot = usersData.shots[i];
-        window.canvas.drawShot(c, shot, cPos);
+        window.canvas.drawShot(c, shot, cPos, usersData.users[userId]);
     }
+
+    c.font = 'bold 50pt arial';
+    c.fillStyle = "#FF0000";
+    c.fillText('' + usersData.red_score, 10, 60);
+    c.fillStyle = "#0000FF";
+    c.fillText('' + usersData.blue_score, 10, 120);
 
     requestAnimationFrame(canvas.loop);
 }
 
 ARROW_LENGTH = 20;
 ARROW_WIDTH = 8;
+window.correction = {x:0, y:0}
 window.canvas.drawAnt = function (c, user, cPos) {
     x = user.pos.x - cPos.x + window.canvas.$canvas.width()/2;
     y = user.pos.y - cPos.y + window.canvas.$canvas.height()/2;
@@ -120,8 +125,8 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
     if (x < -50 || y < -50 || x > window.canvas.width+50 ||
         y > window.canvas.height+50) {
-    console.log(x + ", " + y);
-    return;
+        console.log(x + ", " + y);
+        return;
     }
 
     var cx = window.canvas.width / 2;
@@ -138,7 +143,16 @@ window.canvas.drawAnt = function (c, user, cPos) {
         c.drawImage(termite_img_b, -width/2, -height/2, width, height);
     }
     c.restore();
-    //c.strokeStyle = "#000";
+
+    window.correction = fix_head(dir, width, height, x, y);
+}
+
+fix_head = function(dir, width, height) {
+    var asy = { x: (1/4 + Math.cos(dir)/2) * width, y: (1/4-Math.sin(dir)/2) * height };
+    asy.y += 5;
+    if (Math.abs(dir-Math.PI/2) < 0.01 || Math.abs(dir - Math.PI*3/2) < 0.01) { asy.x += 14; }
+    if (dir > Math.PI/2+0.01 && dir < Math.PI*3/2-0.01) { asy.x += 24; }
+    return asy;
 }
 
 ROCK_DIAMETER = 20;
@@ -160,7 +174,7 @@ window.canvas.drawRock = function (rock) {
 }
 
 SHOT_RADIUS = 4;
-window.canvas.drawShot = function(c, shot, cPos) {
+window.canvas.drawShot = function(c, shot, cPos, user) {
     x = shot.x - cPos.x + window.canvas.$canvas.width()/2;
     y = shot.y - cPos.y + window.canvas.$canvas.height()/2;
 
@@ -171,7 +185,7 @@ window.canvas.drawShot = function(c, shot, cPos) {
     c.beginPath();
     c.arc(x, y, 4, 0, 2*Math.PI, false);
     c.closePath();
-    c.fillStyle = "red";
+    c.fillStyle = (user.team === 0 ? "red" : "blue");
     c.fill();
     c.lineWidth = 2;
     c.strokeStyle = "black";
