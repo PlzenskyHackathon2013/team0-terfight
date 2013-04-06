@@ -49,6 +49,12 @@ window.canvas.loop = function () {
     $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
 
 
+    // borders
+    c.lineWidth = 6;
+    c.strokeRect(-cPos.x+c.canvas.width/2, -cPos.y+c.canvas.height/2, helloData.size.width, helloData.size.height);
+    document.title = cPos.x + " - " + cPos.y;
+
+
     for (var userId in usersData.users)
     {
         var user = usersData.users[userId];
