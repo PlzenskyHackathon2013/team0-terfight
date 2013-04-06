@@ -66,8 +66,8 @@ window.canvas.drawAnt = function (c, user, cPos) {
   for (var i=0; i<ARROW_LENGTH; i++) {
     c.lineWidth = ARROW_WIDTH * (1-i/ARROW_LENGTH);
     c.beginPath();
-    c.moveTo(x+i*Math.sin(dir), y+i*Math.cos(dir));
-    c.lineTo(x+(i+1)*Math.sin(dir), y+(i+1)*Math.cos(dir));
+    c.moveTo(x+i*Math.cos(dir), y-i*Math.sin(dir));
+    c.lineTo(x+(i+1)*Math.cos(dir), y-(i+1)*Math.sin(dir));
     c.stroke();
     c.closePath();
   }
