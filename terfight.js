@@ -63,27 +63,31 @@ function shot_command(id, data) {
 }
 
 function in_stone(pos) {
-    _.each(stones, function(stone, index, list) {
-        for (var i = 0; i < stone.vertices-1; i++) {
-            var count = 0;
+    var ins = false;
+    _.each(stones.l, function(stone, index, list) {
+        var count = 0;
+        for (var i = 0; i < stone.vertices; i++) {
+            var n = (i+1) % stone.vertices;
 
-            var left = (stone.l[i] < stone.l[i+1]) ? stone.l[i] : stone.l[i+1];
-            var right = (stone.l[i] < stone.l[i+1]) ? stone.l[i+1] : stone.l[i];
+            var left = (stone.l[i].x < stone.l[n].x) ? stone.l[i] : stone.l[n];
+            var right = (stone.l[i].x < stone.l[n].x) ? stone.l[n] : stone.l[i];
 
             if (left.x < pos.x && pos.x < right.x) {
-                var y = (pos.x - left.x) / (right.x - left.x) * (right.y - left.y);
-                if (y < pos.y) {
+                var y = (pos.x - left.x) / (right.x - left.x) * (right.y - left.y) + left.y;
+
+                if (y > pos.y) {
                     count++;
                 }
             }
+        }
 
-            if (count % 2) {
-                return true;
-            }
+        if (count % 2) {
+            ins = true;
+            return true;
         }
     });
 
-    return false;
+    return ins;
 }
 
 function compute_delta(messages) {
