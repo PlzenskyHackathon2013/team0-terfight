@@ -1,6 +1,6 @@
 window.canvas = {};
 var c;
-
+var stonepat;
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                 window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -8,8 +8,15 @@ var c;
   })();
 
 window.canvas.startLoop = function($canvas) {
-  window.canvas.$canvas = $canvas;
-  c = window.canvas.$canvas.get(0).getContext("2d");
+    window.canvas.$canvas = $canvas;
+    c = window.canvas.$canvas.get(0).getContext("2d");
+
+    var stonebg = new Image();
+    stonebg.src = "images/stone.jpg";
+    stonebg.onload = function() {
+        stonepat = c.createPattern(stonebg, "no-repeat");
+    }
+ 
   requestAnimationFrame(function() {
     window.canvas.loop();
   });
@@ -29,15 +36,12 @@ window.canvas.loop = function () {
 
   // background move
   var cPos = usersData.users[helloData.id].pos;
-  backgroundPos.x += cPos.x - lastPos.x;
-  backgroundPos.y += cPos.y - lastPos.y;
+  backgroundPos.x += lastPos.x - cPos.x;
+  backgroundPos.y += lastPos.y - cPos.y;
 
   lastPos = { x: cPos.x, y: cPos.y };
 
-  console.log("backgroundPos x: " + backgroundPos.x);
-  console.log("lastPos x: " + lastPos.x);
-  console.log("cPos x: " + cPos.x);
-  $("body").css("background-position: " + backgroundPos.x + " " + backgroundPos.y);
+  $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
 
 
   for (var userId in usersData.users)
@@ -76,7 +80,8 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (c, rock, cPos) {
-  c.fillStyle = "#aaa";
+  
+  c.fillStyle = stonepat;
   c.lineWidth = 1;
 
   c.beginPath();

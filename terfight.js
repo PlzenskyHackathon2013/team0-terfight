@@ -1,7 +1,7 @@
 var _ = require('underscore');
 
 var DIM = 1000,
-    SPEED = 5;
+    SPEED = 2;
 
 var users = {},
     messages = {},
