@@ -41,5 +41,5 @@ function new_player(socket) {
 }
 
 function disconnect(id, socket) {
-    users = _.omit(users, '' + id);
+    users = _.omit(users, id.toString());
 }

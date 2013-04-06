@@ -30,6 +30,12 @@ window.canvas.loop = function () {
     window.canvas.drawRock(c, rock);
   }
 
+  (function() {
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+  })();
+
   requestAnimationFrame(canvas.loop);
 }
 
