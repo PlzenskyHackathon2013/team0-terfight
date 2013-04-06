@@ -48,4 +48,4 @@ io.set('log level', 1);
 io.sockets.on('connection', terfight.new_connection);
 
 // Terfight specific
-setInterval(terfight.send_info, 1000, io.sockets);
+setInterval(terfight.send_info, 20, io.sockets);
