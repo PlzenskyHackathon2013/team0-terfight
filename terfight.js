@@ -19,28 +19,22 @@ exports.new_connection = function(socket) {
 }
 
 exports.send_info = function(socket) {
+    compute_new_positions();
+
     socket.emit('users', {
         'number': _.size(users),
-        'positions': compute_new_positions()
+        'users': users
     });
 }
 
 function compute_new_positions() {
-    var positions = {};
-
     _.each(users, function (user, id, list) {
         var delta = compute_delta(messages[id]);
-        positions[id] = {
-            'x': user.pos.x + delta.x,
-            'y': user.pos.y + delta.y
-        }
-
-        users[id].pos = positions[id];
+        user.pos.x += delta.x;
+        user.pos.y += delta.y;
     });
 
     messages = {};
-
-    return positions;
 }
 
 function move_command(id, data) {
@@ -51,6 +45,8 @@ function move_command(id, data) {
         'x': Math.cos(data.direction),
         'y': Math.sin(data.direction)
     });
+
+    users[id].direction = data.direction;
 }
 
 function shot_command(id, data) {
@@ -107,13 +103,15 @@ function new_player(socket) {
 
     users[id] = {
         'score': 0,
-        'pos': new_spawn_point()
+        'pos': new_spawn_point(),
+        'direction': 0,
     };
 
 
     socket.emit("hello", {
         "id": id,
-        "pos": users[id].pos
+        "pos": users[id].pos,
+        "direction": users[id].direction
     });
 
     return id;
