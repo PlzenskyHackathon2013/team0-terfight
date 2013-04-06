@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var users = {}
+var users = {};
 var next_id = 0;
 
 exports.new_connection = function(socket) {
@@ -18,9 +18,8 @@ function new_player(socket) {
 
     users[id] = {
         'score': 0
-    }
+    };
 
-    socket.set('id', id);
     socket.emit("hello", {"id": id});
 
     return id;
