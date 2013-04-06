@@ -35,5 +35,5 @@
   "bundleDependencies": [],
 
   "private": true,
-  "main": "node app.js"
+  "main": "server.js"
 }
