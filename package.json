@@ -28,7 +28,8 @@
     "express": "*",
     "ejs": "*",
     "socket.io": "*",
-    "async": "*"
+    "async": "*",
+    "underscore": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
