@@ -1,9 +1,11 @@
 $(document).ready(function() {
 	socket = io.connect(document.domain);
 	socket.on("hello", function(data) {
+		helloData = data;
 	  	console.log(data);
 	});
 	socket.on("users", function(data) {
+	    usersData = data;
 	    console.log(data);
 	});
 
