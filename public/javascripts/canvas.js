@@ -29,15 +29,12 @@ window.canvas.loop = function () {
 
   // background move
   var cPos = usersData.users[helloData.id].pos;
-  backgroundPos.x += cPos.x - lastPos.x;
-  backgroundPos.y += cPos.y - lastPos.y;
+  backgroundPos.x += lastPos.x - cPos.x;
+  backgroundPos.y += lastPos.y - cPos.y;
 
   lastPos = { x: cPos.x, y: cPos.y };
 
-  console.log("backgroundPos x: " + backgroundPos.x);
-  console.log("lastPos x: " + lastPos.x);
-  console.log("cPos x: " + cPos.x);
-  $("body").css("background-position: " + backgroundPos.x + " " + backgroundPos.y);
+  $("body").css("background-position", backgroundPos.x + "px " + backgroundPos.y + "px");
 
 
   for (var userId in usersData.users)
