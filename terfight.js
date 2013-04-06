@@ -1,10 +1,12 @@
 var _ = require('underscore');
 
-var DIM = 1000;
-var users = {};
-var messages = {};
-var next_id = 0;
-var stones = {};
+var DIM = 1000,
+    SPEED = 5;
+
+var users = {},
+    messages = {},
+    next_id = 0,
+    stones = {};
 
 exports.new_connection = function(socket) {
     if (_.isEmpty(users)) {
@@ -29,9 +31,16 @@ exports.send_info = function(socket) {
 
 function compute_new_positions() {
     _.each(users, function (user, id, list) {
-        var delta = compute_delta(messages[id]);
-        user.pos.x += delta.x;
-        user.pos.y -= delta.y;
+        if (!_.isEmpty(messages[id])) {
+            var delta = compute_delta(messages[id]);
+            if (!in_stone({
+                'x': user.pos.x + SPEED * delta.x,
+                'y': user.pos.y - SPEED * delta.y
+            })) {
+                user.pos.x += SPEED * delta.x;
+                user.pos.y -= SPEED * delta.y;
+            }
+        }
     });
 
     messages = {};
@@ -50,7 +59,31 @@ function move_command(id, data) {
 }
 
 function shot_command(id, data) {
+    // TODO
+}
 
+function in_stone(pos) {
+    _.each(stones, function(stone, index, list) {
+        for (var i = 0; i < stone.vertices-1; i++) {
+            var count = 0;
+
+            var left = (stone.l[i] < stone.l[i+1]) ? stone.l[i] : stone.l[i+1];
+            var right = (stone.l[i] < stone.l[i+1]) ? stone.l[i+1] : stone.l[i];
+
+            if (left.x < pos.x && pos.x < right.x) {
+                var y = (pos.x - left.x) / (right.x - left.x) * (right.y - left.y);
+                if (y < pos.y) {
+                    count++;
+                }
+            }
+
+            if (count % 2) {
+                return true;
+            }
+        }
+    });
+
+    return false;
 }
 
 function compute_delta(messages) {
