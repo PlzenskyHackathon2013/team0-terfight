@@ -16,9 +16,16 @@ $(document).ready(function() {
 my_direction = Math.PI;
 already_pressed = [];
 $(document).keydown(function(e) {
+	if (already_pressed.indexOf(e.which) != -1) {
+		return;
+	};
+
 	already_pressed.push(e.which);
 
-	if (e.which == 38) {
+    if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
+    	my_direction = 3/4*Math.PI;  
+    }  
+    else if (already_pressed.indexOf(38) >= 0) {
 		my_direction = Math.PI;
 	}
 	else if (e.which == 39) {
@@ -34,10 +41,10 @@ $(document).keydown(function(e) {
 $(document).keyup(function(e) {
 	for (var i=0; i<already_pressed.length; i++) {
 		if (already_pressed[i] == e.which) {
-			already_pressed.splice(i,1);
+			already_pressed.splice(i, 1);
 			break;
 		}
-	}
+	};
 });
 
 window.main = {};
