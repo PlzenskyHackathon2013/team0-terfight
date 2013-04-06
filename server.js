@@ -8,7 +8,8 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , terfight = require('./terfight')
 
 var app = express();
 
@@ -41,6 +42,4 @@ server.listen(app.get('port'), app.get('domain'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-io.sockets.on('connection', function(socket) {
-     socket.send('hello');
-});
+io.sockets.on('connection', terfight.new_player);
