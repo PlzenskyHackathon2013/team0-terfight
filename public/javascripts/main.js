@@ -1,5 +1,16 @@
 $(document).ready(function() {
-	window.canvas.startLoop(document.getElementById("canv"));
+	var $canvas = $("#canv");
+	var canvas = $canvas.get(0);
+	
+	canvasSizeUpdate = function() {
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+	};
+	
+	$(window).resize(canvasSizeUpdate);
+	canvasSizeUpdate();
+
+	window.canvas.startLoop($canvas);
 });
 
 window.main = {};

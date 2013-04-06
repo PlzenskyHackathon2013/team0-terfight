@@ -1,7 +1,7 @@
 window.canvas = {}
 
-window.canvas.startLoop = function(c) {
-  window.canvas.domElement = c;
+window.canvas.startLoop = function($canvas) {
+  window.canvas.$canvas = $canvas;
   requestAnimationFrame(function() {
     window.canvas.loop();
   });
@@ -13,10 +13,10 @@ window.canvas.rocks = [
   ];
 
 window.canvas.loop = function () {
-  c = window.canvas.domElement.getContext("2d");
+  c = window.canvas.$canvas.get(0).getContext("2d");
 
   c.fillStyle = "#0f0";
-  c.fillRect(0, 0, 500, 300);
+  c.fillRect(0, 0, window.canvas.$canvas.width(), window.canvas.$canvas.height());
 
   for (var i = 0; i < main.getAnts().length; i++)
   {
