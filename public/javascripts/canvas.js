@@ -67,10 +67,16 @@ window.canvas.loop = function () {
 ARROW_LENGTH = 20;
 ARROW_WIDTH = 8;
 window.canvas.drawAnt = function (c, user, cPos) {
-
     x = user.pos.x - cPos.x + window.canvas.$canvas.width()/2;
     y = user.pos.y - cPos.y + window.canvas.$canvas.height()/2;
     dir = user.direction;
+
+  if (x < -50 || y < -50 || x > window.canvas.width+50 ||
+        y > window.canvas.height+50) {
+    console.log(x + ", " + y);
+    return;
+  }
+
 
     var cx = window.canvas.width / 2;
     var cy = window.canvas.height / 2;
@@ -87,7 +93,21 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (c, rock, cPos) {
-  
+  // do we need to draw this?
+  to_draw = false;
+  for (var i=0; i<rock.l.length; i++)
+  {
+    v = rock.l[i];
+    if (v.x > -50 || v.y > -50 || v.x < window.canvas.width+50 ||
+          v.y < window.canvas.height+50) {
+      to_draw = true;
+    }
+  }
+  if (!to_draw) {
+    return;
+  }
+
+  // ok, let's do it
   c.fillStyle = stonepat;
   c.lineWidth = 1;
 
