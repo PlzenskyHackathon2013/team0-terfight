@@ -32,7 +32,16 @@ $(document).keydown(function(e) {
 
 	old_direction = my_direction;
     if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
-    	my_direction = 3/4*Math.PI;
+    	my_direction = 3/4*Math.PI;  
+    }
+    if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(37) >=0)) {
+    	my_direction = 5/4*Math.Pi;
+    }
+    if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
+    	my_direction = 1/4*Math.PI;  
+    }
+    if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(37) >= 0)){ 
+    	my_direction = 7/4*Math.PI;  
     }
     else if (already_pressed.indexOf(38) >= 0) {
 		my_direction = Math.PI;
