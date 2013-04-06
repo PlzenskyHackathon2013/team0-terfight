@@ -34,13 +34,14 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-var server = http.createServer(app),
-    io = require('socket.io').listen(server);
+var server = http.createServer(app);
+//    io = require('socket.io').listen(server);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+/*
 io.sockets.on('connection', function(socket) {
      socket.send('hello');
-});
+});*/
