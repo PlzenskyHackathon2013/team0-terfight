@@ -2,7 +2,7 @@ var _ = require('underscore');
 
 var DIM = 1200,
     SPEED = 2,
-    MAX_DISTANCE = 300,
+    MAX_DISTANCE = 400,
     TOO_CLOSE = 20,
     SHOT_SPEED = 5;
 
