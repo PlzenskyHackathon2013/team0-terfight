@@ -64,7 +64,7 @@ function new_game() {
 }
 
 function new_spawn_point() {
-    return {'x': 0, 'y':0};
+    return {'x': 5000, 'y': 5000};
 }
 
 function new_player(socket) {
