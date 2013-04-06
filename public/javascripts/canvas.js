@@ -15,18 +15,13 @@ window.canvas.startLoop = function($canvas) {
   });
 }
 
-window.canvas.rocks = [
-    { x: 200, y: 200 },
-    { x: 250, y: 200 }
-  ];
-
 window.canvas.loop = function () {
   if (typeof usersData === "undefined") {
     // data are not yet available
     requestAnimationFrame(canvas.loop);
     return;
   }
-
+// $("body").css("background-position: 5px 8px");
  c.clearRect(0,0, c.canvas.width, c.canvas.height);
 /*  var grass = new Image();
   grass.onload = function() {
