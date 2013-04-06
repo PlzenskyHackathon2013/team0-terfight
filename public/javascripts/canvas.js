@@ -1,4 +1,10 @@
-window.canvas = {}
+window.canvas = {};
+
+(function() {
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+  })();
 
 window.canvas.startLoop = function($canvas) {
   window.canvas.$canvas = $canvas;
@@ -13,37 +19,50 @@ window.canvas.rocks = [
   ];
 
 window.canvas.loop = function () {
+  if (typeof usersData === "undefined") {
+    // data are not yet available
+    requestAnimationFrame(canvas.loop);
+    return;
+  }
+
   c = window.canvas.$canvas.get(0).getContext("2d");
 
   c.fillStyle = "#0f0";
   c.fillRect(0, 0, window.canvas.$canvas.width(), window.canvas.$canvas.height());
 
-  for (var i = 0; i < main.getAnts().length; i++)
+  var cPos;
+  for (var userId in usersData.users)
   {
-    var ant = main.getAnts()[i];
-    window.canvas.drawAnt(c, ant.x, ant.y, ant.dir);
+    if (userId == helloData.id)
+    {
+      cPos = usersData.users[userId].pos;
+    }
   }
 
-  for (var i = 0; i < canvas.rocks.length; i++)
+  for (var userId in usersData.users)
   {
-    var rock = canvas.rocks[i];
-    window.canvas.drawRock(c, rock);
+    var user = usersData.users[userId];
+    window.canvas.drawAnt(c, user, cPos);
   }
 
-  (function() {
-    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-    window.requestAnimationFrame = requestAnimationFrame;
-  })();
+  for (var i = 0; i < helloData.stones.l.length; i++)
+  {
+    var rock = helloData.stones.l[i];
+    window.canvas.drawRock(c, rock, cPos);
+  }
 
   requestAnimationFrame(canvas.loop);
 }
 
 ARROW_LENGTH = 20;
 ARROW_WIDTH = 8;
-window.canvas.drawAnt = function (c, x, y, dir) {
+window.canvas.drawAnt = function (c, user, cPos) {
+  x = user.pos.x - cPos.x + window.canvas.$canvas.width()/2;
+  y = user.pos.y - cPos.y + window.canvas.$canvas.height()/2;
+  dir = user.direction;
+
   c.strokeStyle = "#000";
-  
+
   for (var i=0; i<ARROW_LENGTH; i++) {
     c.lineWidth = ARROW_WIDTH * (1-i/ARROW_LENGTH);
     c.beginPath();
@@ -55,22 +74,18 @@ window.canvas.drawAnt = function (c, x, y, dir) {
 }
 
 ROCK_DIAMETER = 20;
-window.canvas.drawRock = function (c, rock) {
+window.canvas.drawRock = function (c, rock, cPos) {
+  x = rock.x - cPos.x;
+  y = rock.y - cPos.y;
+
   c.fillStyle = "#aaa";
   c.lineWidth = 1;
 
   c.beginPath();
 
-  if (!rock.rndList) {
-    rock.rndList = {};
-    for (var i=0; i<6; i++) {
-      rock.rndList[i] = 0.2+Math.random()*0.8;
-    };
-  }
-
-  c.moveTo(rock.x+ROCK_DIAMETER*rock.rndList[i]*Math.sin(0), rock.y+ROCK_DIAMETER*rock.rndList[i]*Math.cos(0));
-  for (var i=0; i<6; i++) {
-    c.lineTo(rock.x+ROCK_DIAMETER*rock.rndList[(i+1)%6]*Math.sin(((i+1)%6)/3*Math.PI), rock.y+ROCK_DIAMETER*rock.rndList[(i+1)%6]*Math.cos(((i+1)%6)/3*Math.PI));
+  c.moveTo(rock.l[0].x, rock.l[1].y);
+  for (var i=1; i<rock.l.length; i++) {
+    c.lineTo(rock.l[i].x, rock.l[i].y);
   };
 
   c.closePath();

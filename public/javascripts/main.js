@@ -1,9 +1,11 @@
 $(document).ready(function() {
 	socket = io.connect(document.domain);
 	socket.on("hello", function(data) {
+		helloData = data;
 	  	console.log(data);
 	});
 	socket.on("users", function(data) {
+	    usersData = data;
 	    console.log(data);
 	});
 
@@ -24,31 +26,41 @@ $(document).ready(function() {
 var my_direction = Math.PI;
 var already_pressed = [];
 
+var UP = 38,
+    LEFT = 37,
+    DOWN = 40,
+    RIGHT = 39,
+    SPACE = 32;
+
 dir_change = function(e) {
 	something_happened = true;
-    if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
-    	my_direction = 3/4*Math.PI;
+    if ((already_pressed.indexOf(UP) >= 0) &&
+        (already_pressed.indexOf(RIGHT) >= 0)){
+    	my_direction = 1/4 * Math.PI;
     }
-    else if ((already_pressed.indexOf(38) >= 0) && (already_pressed.indexOf(37) >=0)) {
+    else if ((already_pressed.indexOf(UP) >= 0) &&
+             (already_pressed.indexOf(LEFT) >=0)) {
+    	my_direction = 3/4 * Math.PI;
+    }
+    else if ((already_pressed.indexOf(DOWN) >= 0) &&
+             (already_pressed.indexOf(RIGHT) >= 0)){
+    	my_direction = 7/4*Math.PI;
+    }
+    else if ((already_pressed.indexOf(DOWN) >= 0) &&
+             (already_pressed.indexOf(LEFT) >= 0)){
     	my_direction = 5/4*Math.PI;
     }
-    else if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(39) >= 0)){ 
-    	my_direction = 1/4*Math.PI;  
-    }
-    else if ((already_pressed.indexOf(40) >= 0) && (already_pressed.indexOf(37) >= 0)){ 
-    	my_direction = 7/4*Math.PI;  
-    }
-    else if (already_pressed.indexOf(38) >= 0) {
-		my_direction = Math.PI;
+    else if (already_pressed.indexOf(UP) >= 0) {
+		my_direction = 1/2 * Math.PI;
 	}
-	else if (already_pressed.indexOf(39) >= 0) {
-		my_direction = Math.PI / 2;
-	}
-	else if (already_pressed.indexOf(40) >= 0) {
+	else if (already_pressed.indexOf(RIGHT) >= 0) {
 		my_direction = 0;
 	}
-	else if (already_pressed.indexOf(37) >= 0) {
-		my_direction = 3/2*Math.PI;
+	else if (already_pressed.indexOf(DOWN) >= 0) {
+		my_direction = 3/2 * Math.PI;
+	}
+	else if (already_pressed.indexOf(LEFT) >= 0) {
+		my_direction = Math.PI;
 	}
 	else
 	{
@@ -60,7 +72,7 @@ dir_change = function(e) {
 		console.log("emit move, direction: " + my_direction);
 	}
 
-	if (already_pressed.indexOf(32) >= 0) {
+	if (already_pressed.indexOf(SPACE) >= 0) {
 		socket.emit("fire", {});
 		console.log("fire");
 	}
