@@ -30,7 +30,10 @@ var UP = 38,
     RIGHT = 39,
     SPACE = 32;
 
-dir_change = function() {
+var KEY_DOWN = 1,
+    KEY_UP = 2,
+    KEY_HOLD = 3;
+dir_change = function(when) {
 	something_happened = true;
     if ((already_pressed.indexOf(UP) >= 0) &&
         (already_pressed.indexOf(RIGHT) >= 0)){
@@ -69,7 +72,7 @@ dir_change = function() {
 		socket.emit("move", { direction: my_direction });
 	}
 
-	if (already_pressed.indexOf(SPACE) >= 0) {
+	if (when === KEY_DOWN && already_pressed.indexOf(SPACE) >= 0) {
 		socket.emit("fire", {});
 		console.log("fire");
 	}
@@ -78,7 +81,7 @@ dir_change = function() {
 $(document).keydown(function(e) {
 	if (already_pressed.indexOf(e.which) == -1) {
 		already_pressed.push(e.which);
-		dir_change();
+		dir_change(KEY_DOWN);
 	};
 });
 $(document).keyup(function(e) {
@@ -89,9 +92,9 @@ $(document).keyup(function(e) {
 		}
 	};
 
-	dir_change();
+	dir_change(KEY_UP);
 });
-setInterval(function() { dir_change(); }, 20);
+setInterval(function() { dir_change(KEY_HOLD); }, 20);
 
 
 window.main = {};
