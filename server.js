@@ -42,4 +42,5 @@ server.listen(app.get('port'), app.get('domain'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+io.set('transports', ['xhr-polling']);
 io.sockets.on('connection', terfight.new_player);
