@@ -4,16 +4,6 @@
       <title><%= title %></title>
       <link rel='stylesheet' href='/stylesheets/style.css' />
       <script src="/socket.io/socket.io.js"></script>
-      <script>
-          var socket = io.connect(document.domain);
-          socket.on("hello", function(data) {
-              console.log(data);
-          });
-          socket.on("users", function(data) {
-              console.log(data);
-          });
-          socket.emit("move", {'direction': 0});
-      </script>
       <style>
           #canv {
               position: absolute;
