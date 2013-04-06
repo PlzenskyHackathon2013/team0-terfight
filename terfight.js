@@ -199,7 +199,7 @@ function compute_delta(messages) {
 // TODO: fix stones collisions
 // TODO: make stones not intersect with the edges of the screen, maybe.
 function new_game() {
-    stones.no = Math.floor(Math.random() * 30);
+    stones.no = 25+Math.floor(Math.random() * 10);
     stones.l = [];
     var stone;
     var scale; 
@@ -207,8 +207,8 @@ function new_game() {
     {
         stone = {};
         stone.l = [];
-        stone.vertices = 3 + Math.floor(Math.random() * 8);
-        stone.diam = Math.floor(Math.random() * 100);
+        stone.vertices = 4 + Math.floor(Math.random() * 8);
+        stone.diam = Math.floor(Math.random() * 140);
         stone.center = {};
         stone.center.x = Math.floor(Math.random() * DIM);
         stone.center.y = Math.floor(Math.random() * DIM);
@@ -222,14 +222,18 @@ function new_game() {
         }
         stones.l.push(stone);
     }
-
 }
 
 function new_spawn_point() {
-    var p = {};
-    p.x = Math.floor(Math.random() * DIM);
-    p.y = Math.floor(Math.random() * DIM);
-    return p; 
+    while (true) {
+        var p = {};
+        p.x = Math.floor(Math.random() * DIM);
+        p.y = Math.floor(Math.random() * DIM);
+        if (in_stone(p)) {
+            continue;
+        }
+        return p; 
+    }
 } 
 
 function new_player(socket) {
