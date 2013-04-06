@@ -231,6 +231,9 @@ function new_spawn_point() {
         p.y = Math.floor(Math.random() * DIM);
         if (in_stone(p)) {
             continue;
+        } else if ((p.x < 50 || p.x > DIM - 50) ||
+                   (p.y < 50 || p.y > DIM - 50)) {
+            continue;
         }
         return p; 
     }
