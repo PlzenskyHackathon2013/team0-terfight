@@ -37,14 +37,7 @@ window.canvas.loop = function () {
   //c.fillStyle = "#0f0";
   //c.fillRect(0, 0, window.canvas.$canvas.width(), window.canvas.$canvas.height());
 
-  var cPos;
-  for (var userId in usersData.users)
-  {
-    if (userId == helloData.id)
-    {
-      cPos = usersData.users[userId].pos;
-    }
-  }
+  var cPos = usersData.users[helloData.id].pos;
 
   for (var userId in usersData.users)
   {
