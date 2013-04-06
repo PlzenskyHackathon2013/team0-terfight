@@ -74,7 +74,6 @@ dir_change = function(when) {
 
 	if (when === KEY_DOWN && already_pressed.indexOf(Q_KEY) >= 0) {
 		socket.emit("fire", { correction: correction });
-		console.log("fire");
 	}
 };
 

@@ -111,7 +111,6 @@ window.canvas.drawAnt = function (c, user, cPos) {
 
     if (x < -50 || y < -50 || x > window.canvas.width+50 ||
         y > window.canvas.height+50) {
-        console.log(x + ", " + y);
         return;
     }
 
