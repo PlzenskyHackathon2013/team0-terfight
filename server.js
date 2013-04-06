@@ -42,5 +42,10 @@ server.listen(app.get('port'), app.get('domain'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-io.set('transports', ['xhr-polling']);
-io.sockets.on('connection', terfight.new_player);
+// Websockets
+//io.set('transports', ['xhr-polling']);
+io.set('log level', 1);
+io.sockets.on('connection', terfight.new_connection);
+
+// Terfight specific
+setInterval(terfight.send_info, 1000, io.sockets);
