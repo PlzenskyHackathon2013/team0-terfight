@@ -41,6 +41,7 @@ exports.send_info = function(socket) {
 }
 
 exports.update_shots = function() {
+    var new_shots = []
     shots = _.filter(shots, function(shot) {
         shot.x += SHOT_SPEED * Math.cos(shot.direction);
         shot.y -= SHOT_SPEED * Math.sin(shot.direction);
@@ -58,6 +59,16 @@ exports.update_shots = function() {
             if (shot.user != user.id &&
                 dist(shot.x, shot.y, user.pos.x + correction.x, user.pos.y + correction.y) < TOO_CLOSE) {
 
+                for (var i = 0; i < 8; i++) {
+                    new_shots.push({
+                        'user': user.id,
+                        'x': user.pos.x+correction.x,
+                        'y': user.pos.y+correction.y,
+                        'start_x': user.pos.x+correction.x,
+                        'start_y': user.pos.y+correction.y,
+                        'direction': i /4 * Math.PI
+                    });
+                }
                 dead(user);
 
                 if (users[shot.user].team == 0) {
@@ -84,6 +95,8 @@ exports.update_shots = function() {
 
         return true;
     });
+
+    shots.push.apply(shots, new_shots);
 }
 
 function dist(x1, y1, x2, y2) {
