@@ -79,12 +79,10 @@ dir_change = function(e) {
 };
 
 $(document).keydown(function(e) {
-	if (already_pressed.indexOf(e.which) != -1) {
-		return;
+	if (already_pressed.indexOf(e.which) == -1) {
+		already_pressed.push(e.which);
 	};
-
-	already_pressed.push(e.which);
-
+	
 	dir_change(e);
 });
 $(document).keyup(function(e) {
