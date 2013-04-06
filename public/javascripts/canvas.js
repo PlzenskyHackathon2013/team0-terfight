@@ -67,6 +67,11 @@ window.canvas.loop = function () {
         window.canvas.drawRock(c, rock, cPos);
     }
 
+    for (var i = 0; i < usersData.shots.length; i++) {
+        var shot = usersData.shots[i];
+        window.canvas.drawShot(c, shot, cPos);
+    }
+
     requestAnimationFrame(canvas.loop);
 }
 
@@ -127,5 +132,22 @@ window.canvas.drawRock = function (c, rock, cPos) {
 
     c.closePath();
     c.fill();
+    c.stroke();
+}
+
+SHOT_RADIUS = 4;
+window.canvas.drawShot = function(c, shot, cPos) {
+    if (shot.x < 0 || shot.y < 0 || shot.x > window.canvas.$canvas.width() || shot.y > window.canvas.$canvas.height()) {
+        return;
+    }
+
+    c.beginPath();
+    c.arc(shot.x - cPos.x + window.canvas.$canvas.width()/2,
+        shot.y - cPos.y + window.canvas.$canvas.height()/2, 4, 0, 2*Math.PI, false);
+    c.closePath();
+    c.fillStyle = "red";
+    c.fill();
+    c.lineWidth = 2;
+    c.strokeStyle = "black";
     c.stroke();
 }
