@@ -31,7 +31,7 @@ function compute_new_positions() {
     _.each(users, function (user, id, list) {
         var delta = compute_delta(messages[id]);
         user.pos.x += delta.x;
-        user.pos.y += delta.y;
+        user.pos.y -= delta.y;
     });
 
     messages = {};
