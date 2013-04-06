@@ -6,7 +6,8 @@ var DIM = 1000,
 var users = {},
     messages = {},
     next_id = 0,
-    stones = {};
+    stones = {},
+    shots = [];
 
 exports.new_connection = function(socket) {
     if (_.isEmpty(users)) {
@@ -17,7 +18,7 @@ exports.new_connection = function(socket) {
 
     socket.on('disconnect', _.partial(disconnect, id));
     socket.on('move', _.partial(move_command, id));
-    socket.on('shot', _.partial(shot_command, id));
+    socket.on('shot', shot_command);
 }
 
 exports.send_info = function(socket) {
@@ -27,6 +28,10 @@ exports.send_info = function(socket) {
         'number': _.size(users),
         'users': users
     });
+}
+
+exports.update_shots = function() {
+    _.each()
 }
 
 function compute_new_positions() {
@@ -59,8 +64,12 @@ function move_command(id, data) {
     users[id].direction = data.direction;
 }
 
-function shot_command(id, data) {
-    // TODO
+function shot_command(data) {
+    shots.push({
+        'x': data.x,
+        'y': data.y,
+        'direction': data.direction
+    });
 }
 
 function in_stone(pos) {
