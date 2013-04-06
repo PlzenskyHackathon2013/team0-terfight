@@ -82,7 +82,6 @@ function new_game() {
         {
             scale = 0.2 + Math.random() * 0.8;
             stone_next = {};
-            console.log(scale.toString());
             stone_next.x = stone.center.x + Math.floor( stone.diam*scale*Math.sin( (k%stone.vertices) * (2*Math.PI/stone.vertices) ));
             stone_next.y = stone.center.y + Math.floor( stone.diam*scale*Math.cos( (k%stone.vertices) * (2*Math.PI/stone.vertices) ));
             stone.l.push(stone_next);
