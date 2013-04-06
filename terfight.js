@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var DIM = 2000,
+var DIM = 1200,
     SPEED = 2,
     MAX_DISTANCE = 300,
     TOO_CLOSE = 20,

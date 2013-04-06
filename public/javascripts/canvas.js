@@ -89,7 +89,7 @@ window.canvas.loop = function () {
 
     for (var i = 0; i < usersData.shots.length; i++) {
         var shot = usersData.shots[i];
-        window.canvas.drawShot(c, shot, cPos, usersData.users[userId]);
+        window.canvas.drawShot(c, shot, cPos, usersData.users[shot.user]);
     }
 
     c.font = 'bold 50pt arial';
