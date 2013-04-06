@@ -45,9 +45,9 @@ window.canvas.loop = function () {
     window.canvas.drawAnt(c, user, cPos);
   }
 
-  for (var i = 0; i < helloData.stones.length; i++)
+  for (var i = 0; i < helloData.stones.l.length; i++)
   {
-    var rock = helloData.stones[i];
+    var rock = helloData.stones.l[i];
     window.canvas.drawRock(c, rock, cPos);
   }
 
