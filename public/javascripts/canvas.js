@@ -33,23 +33,25 @@ window.canvas.loop = function () {
   requestAnimationFrame(canvas.loop);
 }
 
-ARROW_LENGTH = 10;
+ARROW_LENGTH = 20;
+ARROW_WIDTH = 8;
 window.canvas.drawAnt = function (c, x, y, dir) {
   c.strokeStyle = "#000";
-  c.lineWidth = 2;
   
-  c.beginPath();
-  
-  c.moveTo(x, y);
-  c.lineTo(x+ARROW_LENGTH*Math.sin(dir), y+ARROW_LENGTH*Math.cos(dir));
-  
-  c.stroke();
-  c.closePath();
+  for (var i=0; i<ARROW_LENGTH; i++) {
+    c.lineWidth = ARROW_WIDTH * (1-i/ARROW_LENGTH);
+    c.beginPath();
+    c.moveTo(x+i*Math.sin(dir), y+i*Math.cos(dir));
+    c.lineTo(x+(i+1)*Math.sin(dir), y+(i+1)*Math.cos(dir));
+    c.stroke();
+    c.closePath();
+  }
 }
 
 ROCK_DIAMETER = 20;
 window.canvas.drawRock = function (c, rock) {
   c.fillStyle = "#aaa";
+  c.lineWidth = 2;
 
   c.beginPath();
 
