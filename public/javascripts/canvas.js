@@ -1,6 +1,8 @@
 window.canvas = {};
 var c;
 var stonepat;
+var termite_img;
+
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                 window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -17,8 +19,11 @@ window.canvas.startLoop = function($canvas) {
         stonepat = c.createPattern(stonebg, "no-repeat");
     }
  
-  requestAnimationFrame(function() {
-    window.canvas.loop();
+    termite_img = new Image();
+    termite_img.src = "images/termite_maly.png";
+
+    requestAnimationFrame(function() {
+        window.canvas.loop();
   });
 }
 
@@ -62,20 +67,22 @@ window.canvas.loop = function () {
 ARROW_LENGTH = 20;
 ARROW_WIDTH = 8;
 window.canvas.drawAnt = function (c, user, cPos) {
-  x = user.pos.x - cPos.x + window.canvas.$canvas.width()/2;
-  y = user.pos.y - cPos.y + window.canvas.$canvas.height()/2;
-  dir = user.direction;
 
-  c.strokeStyle = "#000";
+    x = user.pos.x - cPos.x + window.canvas.$canvas.width()/2;
+    y = user.pos.y - cPos.y + window.canvas.$canvas.height()/2;
+    dir = user.direction;
 
-  for (var i=0; i<ARROW_LENGTH; i++) {
-    c.lineWidth = ARROW_WIDTH * (1-i/ARROW_LENGTH);
-    c.beginPath();
-    c.moveTo(x+i*Math.cos(dir), y-i*Math.sin(dir));
-    c.lineTo(x+(i+1)*Math.cos(dir), y-(i+1)*Math.sin(dir));
-    c.stroke();
-    c.closePath();
-  }
+    var cx = window.canvas.width / 2;
+    var cy = window.canvas.height / 2;
+    var width = termite_img.width;
+    var height = termite_img.height;
+    
+    c.save();
+    c.translate(cx, cy);
+    c.rotate(dir*Math.PI*1/4);
+    c.drawImage(termite_img, x, y, width, height);
+    c.restore();
+    //c.strokeStyle = "#000";
 }
 
 ROCK_DIAMETER = 20;
