@@ -3,7 +3,7 @@ var _ = require('underscore');
 var DIM = 1000,
     SPEED = 2,
     MAX_DISTANCE = 300,
-    TOO_CLOSE = 50,
+    TOO_CLOSE = 20,
     SHOT_SPEED = 5;
 
 var users = {},
@@ -12,7 +12,9 @@ var users = {},
     stones = {},
     shots = [],
     red_score = 0,
-    blue_score = 0;
+    blue_score = 0,
+    red_count = 0,
+    blue_count = 0;
 
 exports.new_connection = function(socket) {
     if (_.isEmpty(users)) {
@@ -54,7 +56,7 @@ exports.update_shots = function() {
         var killed = false
         _.each(users, function(user) {
             if (shot.user != user.id &&
-                dist(shot.x, shot.y, user.pos.x, user.pos.y) < TOO_CLOSE) {
+                dist(shot.x, shot.y, user.pos.x + correction.x, user.pos.y + correction.y) < TOO_CLOSE) {
 
                 dead(user);
 
@@ -216,8 +218,14 @@ function new_player(socket) {
         'id': id,
         'pos': new_spawn_point(),
         'direction': 0,
-        'team': Math.round(Math.random())
+        'team': (red_count < blue_count) ? 0 : 1
     };
+
+    if (users[id].team == 0) {
+        red_count++;
+    } else {
+        blue_count++;
+    }
 
     socket.emit("hello", {
         "id": id,
@@ -234,5 +242,11 @@ function new_player(socket) {
 }
 
 function disconnect(id, socket) {
+    if (users[id].team == 0) {
+        red_count--;
+    } else {
+        blue_count--;
+    }
+
     users = _.omit(users, id.toString());
 }
