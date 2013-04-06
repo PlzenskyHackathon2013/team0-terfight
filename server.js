@@ -13,7 +13,8 @@ var express = require('express')
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('domain', process.env.OPENSHIFT_INTERNAL_UP);
+app.set('port', process.env.OPENSHIFT_INTERNAL_PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
