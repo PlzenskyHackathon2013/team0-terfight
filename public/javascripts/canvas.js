@@ -16,7 +16,7 @@ window.canvas.startLoop = function($canvas) {
     var stonebg = new Image();
     stonebg.src = "images/stone.jpg";
     stonebg.onload = function() {
-        stonepat = c.createPattern(stonebg, "no-repeat");
+        stonepat = c.createPattern(stonebg, "repeat");
     }
  
     termite_img_r = new Image();
