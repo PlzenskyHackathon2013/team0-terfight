@@ -82,6 +82,8 @@ $(document).keydown(function(e) {
 		already_pressed.push(e.which);
 		dir_change(KEY_DOWN);
 	};
+	
+	return false;
 });
 $(document).keyup(function(e) {
 	for (var i=0; i<already_pressed.length; i++) {
