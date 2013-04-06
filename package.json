@@ -28,8 +28,7 @@
     "express": "*",
     "ejs": "*",
     "socket.io": "*",
-    "async": "*",
-    "mongoskin": "*"
+    "async": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
