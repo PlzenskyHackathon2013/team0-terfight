@@ -57,15 +57,15 @@ exports.update_shots = function() {
         var killed = false
         _.each(users, function(user) {
             if (shot.user != user.id &&
-                dist(shot.x, shot.y, user.pos.x + correction.x, user.pos.y + correction.y) < TOO_CLOSE) {
+                dist(shot.x, shot.y, user.pos.x + (user.correction ? user.correction.x : 0), user.pos.y + (user.correction ? user.correction.y : 0)) < TOO_CLOSE) {
 
                 for (var i = 0; i < 8; i++) {
                     new_shots.push({
                         'user': user.id,
-                        'x': user.pos.x+correction.x,
-                        'y': user.pos.y+correction.y,
-                        'start_x': user.pos.x+correction.x,
-                        'start_y': user.pos.y+correction.y,
+                        'x': user.pos.x + (user.correction ? user.correction.x : 0),
+                        'y': user.pos.y + (user.correction ? user.correction.y : 0),
+                        'start_x': user.pos.x + (user.correction ? user.correction.x : 0),
+                        'start_y': user.pos.y + (user.correction ? user.correction.y : 0),
                         'direction': i /4 * Math.PI
                     });
                 }
@@ -115,7 +115,7 @@ function compute_new_positions() {
                 'x': user.pos.x + SPEED * delta.x,
                 'y': user.pos.y - SPEED * delta.y
             };
-            new_pos = { x: new_pos.x+correction.x, y: new_pos.y+correction.y };
+            new_pos = { x: new_pos.x + (user.correction ? user.correction.x : 0), y: new_pos.y + (user.correction ? user.correction.y : 0) };
             if (!in_stone(new_pos) && !trespass(new_pos)) {
                 user.pos.x += SPEED * delta.x;
                 user.pos.y -= SPEED * delta.y;
@@ -126,10 +126,7 @@ function compute_new_positions() {
     messages = {};
 }
 
-correction = undefined;
 function move_command(id, data) {
-    correction = data.correction;
-
     if (!_.has(messages, id)) {
         messages[id] = [];
     }
@@ -139,18 +136,17 @@ function move_command(id, data) {
     });
 
     users[id].direction = data.direction;
+    users[id].correction = data.correction;
 }
 
 function shot_command(id, data) {
-    correction = data.correction;
-
     var user = users[id];
     shots.push({
         'user': user.id,
-        'x': user.pos.x+correction.x,
-        'y': user.pos.y+correction.y,
-        'start_x': user.pos.x+correction.x,
-        'start_y': user.pos.y+correction.y,
+        'x': user.pos.x+data.correction.x,
+        'y': user.pos.y+data.correction.y,
+        'start_x': user.pos.x+data.correction.x,
+        'start_y': user.pos.y+data.correction.y,
         'direction': user.direction
     });
 }
