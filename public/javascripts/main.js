@@ -1,4 +1,9 @@
 $(document).ready(function() {
+	if (location.port != 8000) {
+		window.location.replace("http://terfight-team0.ph:8000/");
+		return;
+	}
+
 	socket = io.connect(document.domain);
 	socket.on("hello", function(data) {
 		helloData = data;
